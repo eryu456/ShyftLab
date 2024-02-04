@@ -66,10 +66,18 @@ function Student() {
     const handleSubmit = (event) => {
         event.preventDefault();
         setErrors(dataValidate(input))
-        axios.post("http://localhost:8000/student/upload", input)
-        .then(res => console.log(res))
-        .catch(err => console.log(err));
-
+        if (errors.fname === "" && errors.lname === "" && errors.dob === ""){
+            axios.post("http://localhost:8000/student/upload", input)
+            .then(res => {
+                console.log(res)
+                alert(`${input.fname} ${input.lname} ${input.dob} has been added!`)
+                input.fname = "";
+                input.lname = "";
+                input.dob = "";
+            })
+            .catch(err => console.log(err));
+     
+        }
     }
 
     useEffect(() =>{
