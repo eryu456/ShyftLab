@@ -31,3 +31,18 @@ app.get('/student', (req, res) => {
         res.json(results);
     })
 })
+app.post('/student/upload', (req, res) => {
+    const sql = "INSERT INTO student (`fname`, `lname`, `dob`) VALUES (?,?,?)"
+    const values = [
+        req.body.fname,
+        req.body.lname,
+        req.body.dob
+    ]
+    db.query(sql, values, (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "An Error has occured when inserting data"});
+        }
+        return res.status(201).json(data);
+    })
+})
