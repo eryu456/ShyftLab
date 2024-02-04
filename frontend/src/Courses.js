@@ -82,12 +82,12 @@ const Table = React.memo(({data})=>{
 
 function dataValidate(input) {
     let error = {};
-    const namePattern = /^[A-Za-z]+$/
+    const namePattern = /^[A-Za-z ]+$/
 
     if (input.cname === "") {
         error.cname = "Please enter the course name"
     }
-    else if (!namePattern.test(input.fname)){
+    else if (!namePattern.test(input.cname)){
         error.cname = "Please enter a valid name"
     }
     else {

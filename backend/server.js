@@ -84,10 +84,13 @@ app.post('/results/upload', (req, res) => {
     ]
     db.query(sql, values, (err, data) => {
         if (err) {
-            console.error(err);
+            console.error(err);s
             return res.status(500).json({error: "An Error has occured when inserting data"});
         }
-        return res.status(201).json(data);
+        db.query('SELECT * FROM results', (error, results) => {
+            if (error) throw error;
+            res.json(results);
+        });
     })
 })
 
