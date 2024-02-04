@@ -20,26 +20,6 @@ function Result() {
     })
     const scores = useMemo(() => ['A', 'B', 'C', 'D', 'E', 'F'], []);
 
-
-    // const scores =['A', 'B', 'D', 'C', 'E', 'F'];
-
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     const currentError = dataValidate(input);
-    //     setErrors(currentError);
-
-    //     const hasErrors = Object.values(currentError).some(error => error !== "");
-    //     if (!hasErrors){
-    //         axios.post("http://localhost:8000/results/upload", input)
-    //         .then(res => {
-    //             console.log(res)
-    //             alert(`${input.cname} Name: ${input.sname} Score: ${input.score} has been added!`)
-    //             setInput({sname: '', cname: '', score: ''})
-    //         })
-    //         .catch(err => console.log(err));
-    //     }
-    // }
-
     const handleInput = useCallback((event) => {
         setInput(input => ({ ...input, [event.target.name]: event.target.value }));
     }, []);
