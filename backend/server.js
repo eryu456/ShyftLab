@@ -46,3 +46,50 @@ app.post('/student/upload', (req, res) => {
         return res.status(201).json(data);
     })
 })
+
+app.get('/courses', (req, res) => {
+    db.query('SELECT * FROM courses', (error, results) => {
+        if (error) throw error;
+        res.json(results);
+    })
+})
+
+app.post('/courses/upload', (req, res) => {
+    const sql = "INSERT INTO courses (`cname`) VALUES (?)"
+    const values = [
+        req.body.cname,
+    ]
+    db.query(sql, values, (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "An Error has occured when inserting data"});
+        }
+        return res.status(201).json(data);
+    })
+})
+
+app.get('/results', (req, res) => {
+    db.query('SELECT * FROM results', (error, results) => {
+        if (error) throw error;
+        res.json(results);
+    })
+})
+
+app.post('/results/upload', (req, res) => {
+    const sql = "INSERT INTO results (`cname`, `sname`, `score`) VALUES (?)"
+    const values = [
+        req.body.cname,
+        req.body.sname,
+        req.body.score,
+    ]
+    db.query(sql, values, (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({error: "An Error has occured when inserting data"});
+        }
+        return res.status(201).json(data);
+    })
+})
+
+
+
