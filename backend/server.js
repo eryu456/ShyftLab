@@ -27,13 +27,13 @@ db.connect(err => {
     console.log(`Connected to database with ID ` + db.threadId);
 });
 
-app.get('/student', (req, res) => {
+app.get('/student_data', (req, res) => {
     db.query('SELECT * FROM student', (error, results) => {
         if (error) throw error;
         res.json(results);
     })
 })
-app.post('/student/upload', (req, res) => {
+app.post('/student_data/upload', (req, res) => {
     const sql = "INSERT INTO student (`fname`, `lname`, `dob`) VALUES (?,?,?)"
     const values = [
         req.body.fname,
@@ -45,18 +45,21 @@ app.post('/student/upload', (req, res) => {
             console.error(err);
             return res.status(500).json({error: "An Error has occured when inserting data"});
         }
-        return res.status(201).json(data);
+        db.query('SELECT * FROM student', (error, results) => {
+            if (error) throw error;
+            res.json(results);
+        })
     })
 })
 
-app.get('/courses', (req, res) => {
+app.get('/courses_data', (req, res) => {
     db.query('SELECT * FROM courses', (error, results) => {
         if (error) throw error;
         res.json(results);
     })
 })
 
-app.post('/courses/upload', (req, res) => {
+app.post('/courses_data/upload', (req, res) => {
     const sql = "INSERT INTO courses (`cname`) VALUES (?)"
     const values = [
         req.body.cname,
@@ -66,18 +69,21 @@ app.post('/courses/upload', (req, res) => {
             console.error(err);
             return res.status(500).json({error: "An Error has occured when inserting data"});
         }
-        return res.status(201).json(data);
+        db.query('SELECT * FROM courses', (error, results) => {
+            if (error) throw error;
+            res.json(results);
+        })
     })
 })
 
-app.get('/results', (req, res) => {
+app.get('/results_data', (req, res) => {
     db.query('SELECT * FROM results', (error, results) => {
         if (error) throw error;
         res.json(results);
     })
 })
 
-app.post('/results/upload', (req, res) => {
+app.post('/results_data/upload', (req, res) => {
     const sql = "INSERT INTO results (`cname`, `sname`, `score`) VALUES (?,?,?)"
     const values = [
         req.body.cname,
