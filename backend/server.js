@@ -76,7 +76,7 @@ app.get('/results', (req, res) => {
 })
 
 app.post('/results/upload', (req, res) => {
-    const sql = "INSERT INTO results (`cname`, `sname`, `score`) VALUES (?)"
+    const sql = "INSERT INTO results (`cname`, `sname`, `score`) VALUES (?,?,?)"
     const values = [
         req.body.cname,
         req.body.sname,

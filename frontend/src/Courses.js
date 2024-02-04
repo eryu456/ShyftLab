@@ -88,10 +88,10 @@ function dataValidate(input) {
         error.cname = "Please enter the course name"
     }
     else if (!namePattern.test(input.fname)){
-        error.fname = "Please enter a valid name"
+        error.cname = "Please enter a valid name"
     }
     else {
-        error.fname =''
+        error.cname =''
     } 
     return error;
 }
