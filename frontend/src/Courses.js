@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import "./App.css";
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 
 function Course() {
   const [input, setInput] = useState({
@@ -12,9 +13,10 @@ function Course() {
     cname: "",
   });
   const handleInput = useCallback((event) => {
-    event.persist();
-    setInput({ ...input, [event.target.name]: event.target.value });
-    console.log(input);
+    setInput((input) => ({
+      ...input,
+      [event.target.name]: event.target.value,
+    }));
   }, []);
 
   const handleSubmit = useCallback((event) => {
@@ -52,21 +54,26 @@ function Course() {
 
   return (
     <div className="FormPage">
-      <form action="" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="cname">Course Name</label>
-          <input
-            type="text"
-            value={input.cname}
-            onChange={handleInput}
-            name="cname"
-            placeholder="Enter Course Name"
-          />
-          {errors.cname && <span className="textError">{errors.cname}</span>}
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-      <Table data={output} />
+        <form onSubmit={handleSubmit}>
+            <div>
+                <TextField
+                label="Course Name"
+                variant="outlined"
+                value={input.cname}
+                onChange={handleInput}
+                name="cname"
+                placeholder="Enter Course Name"
+                error={Boolean(errors.cname)}
+                helperText={errors.cname}
+                fullWidth
+                margin="normal"
+                />
+            </div>
+            <Button type="submit" variant="contained" color="primary">
+                Submit
+            </Button>
+        </form>
+        <Table data={output} />
     </div>
   );
 }
