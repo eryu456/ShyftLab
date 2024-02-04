@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
+import {Paper, Box, Stack} from '@mui/material/'
 import axios from "axios";
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
 
 function Course() {
   const [input, setInput] = useState({
@@ -53,8 +61,24 @@ function Course() {
   }, []);
 
   return (
-    <div className="FormPage">
-        <form onSubmit={handleSubmit}>
+    <Stack
+        sx = {{
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2,
+        }}
+        direction = 'column'
+    >
+
+        <Box 
+            onSubmit={handleSubmit} 
+            component = 'form'
+            sx={{
+                width: '100%',
+                maxWidth: 360,
+                margin: 'auto',
+              }}
+        >
             <div>
                 <TextField
                 label="Course Name"
@@ -72,28 +96,32 @@ function Course() {
             <Button type="submit" variant="contained" color="primary">
                 Submit
             </Button>
-        </form>
-        <Table data={output} />
-    </div>
+        </Box>
+        <Tables data={output} />
+    </Stack>
   );
 }
 
-const Table = React.memo(({ data }) => {
-  return (
-    <table>
-      <tr>
-        <th>Course Name</th>
-      </tr>
-      {data.map((val, key) => {
-        return (
-          <tr key={key}>
-            <td>{val.cname}</td>
-          </tr>
-        );
-      })}
-    </table>
-  );
-});
+const Tables = React.memo(({ data }) => {
+    return (
+      <TableContainer component = {Paper} sx = {{ overflow: 'auto', maxWidth: '100%'}} >
+          <Table size = 'small' sx ={{minWidth: 650}} stickyHeader label = "Results">
+              <TableHead>
+                  <TableRow>
+                      <TableCell align="left">Course Name</TableCell>
+                  </TableRow>
+              </TableHead>
+              <TableBody>
+                  {data.map((val, key) =>{
+                      return (<TableRow key ={key}>
+                          <TableCell align="left" >{val.cname}</TableCell>
+                      </TableRow>)
+                  })}
+              </TableBody>
+          </Table>
+      </TableContainer>
+    );
+  });
 
 function dataValidate(input) {
   let error = {};

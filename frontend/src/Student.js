@@ -2,9 +2,15 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
-import "./App.css";
+import {Paper, Box, Stack} from '@mui/material/'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -74,23 +80,38 @@ function Student() {
   }, []);
 
   return (
-    <div className="FormPage">
-      <form action="" onSubmit={handleSubmit}>
-        <div>
-          <TextField
-                label = "First Name"
-                variant = "outlined"
-                value = {input.fname}
-                onChange = {handleInput}
-                name = "fname"
-                placeholder = "Enter First Name"
-                error = {Boolean(errors.fname)}
-                helperText = {errors.fname}
-                fullwidth
-                margin = "normal"
-          />
-        </div>
-        <div>
+    <Stack
+        sx = {{
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2,
+        }}
+        direction = 'column'
+    >
+        <Box 
+            onSubmit={handleSubmit} 
+            component = 'form'
+            sx={{
+                width: '100%',
+                maxWidth: 360,
+                margin: 'auto',
+                gap: 2,
+                flexDirection: 'column'
+              }}
+        >
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <TextField
+                  label = "First Name"
+                  variant = "outlined"
+                  value = {input.fname}
+                  onChange = {handleInput}
+                  name = "fname"
+                  placeholder = "Enter First Name"
+                  error = {Boolean(errors.fname)}
+                  helperText = {errors.fname}
+                  fullwidth
+                  margin = "normal"
+            />
             <TextField
                 label = "Last Name"
                 variant = "outlined"
@@ -103,50 +124,52 @@ function Student() {
                 fullwidth
                 margin = "normal"
             />
-        </div>
-        <div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                    label="Date of Birth"
-                    value={input.dob ? dayjs(input.dob) : null}
-                    onChange={handleDate}
-                    slotProps={{
-                        textField: {
-                            error: Boolean(errors.dob),
-                            helperText: errors.dob,
-                        },
-                      }}
-                    disableFuture
-                />
-            </LocalizationProvider>
-        </div>
-        <Button type="submit" variant="contained" color="primary">
-                Submit
-        </Button>
-      </form>
-      <Table data={output} />
-    </div>
+            <DatePicker
+                label="Date of Birth"
+                value={input.dob ? dayjs(input.dob) : null}
+                onChange={handleDate}
+                slotProps={{
+                    textField: {
+                        error: Boolean(errors.dob),
+                        helperText: errors.dob,
+                    },
+                  }}
+                disableFuture
+            />
+
+          <Button type="submit" variant="contained" color="primary">
+                  Submit
+          </Button>
+        </LocalizationProvider>
+      </Box>
+      <Tables data={output} />
+    </Stack>
   );
 }
 
-const Table = React.memo(({ data }) => {
+const Tables = React.memo(({ data }) => {
   return (
-    <table>
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Date of Birth</th>
-      </tr>
-      {data.map((val, key) => {
-        return (
-          <tr key={key}>
-            <td>{val.fname}</td>
-            <td>{val.lname}</td>
-            <td>{val.dob}</td>
-          </tr>
-        );
-      })}
-    </table>
+    <TableContainer component = {Paper} sx = {{ overflow: 'auto', maxWidth: '100%'}} >
+        <Table size = 'small' sx ={{minWidth: 650}} stickyHeader label = "Results">
+            <TableHead>
+                <TableRow>
+                    <TableCell align="left"> First Name</TableCell>
+                    <TableCell align="left"> Last Name</TableCell>
+                    <TableCell align="left"> Date of Birth</TableCell>
+                    
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {data.map((val, key) =>{
+                    return (<TableRow key ={key}>
+                        <TableCell align="left" >{val.fname}</TableCell>
+                        <TableCell align="left" >{val.lname}</TableCell>
+                        <TableCell align="left" >{val.dob}</TableCell>
+                    </TableRow>)
+                })}
+            </TableBody>
+        </Table>
+    </TableContainer>
   );
 });
 

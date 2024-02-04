@@ -1,4 +1,12 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { FormControl, InputLabel, Select, MenuItem, FormHelperText, Button, Stack, Box, Paper } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
 import axios from "axios";
 import "./App.css";
 
@@ -70,89 +78,119 @@ function Result() {
   }, []);
 
   return (
-    <div className="FormPage">
-      <form action="" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="cname">Course Name</label>
-          <select
-            type="text"
+    <Stack
+        sx = {{
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2,
+        }}
+        direction = 'column'
+    >
+
+        <Box 
+            onSubmit={handleSubmit} 
+            component = 'form'
+            sx={{
+                width: '100%',
+                maxWidth: 360,
+                margin: 'auto',
+              }}
+        >
+        <FormControl fullWidth margin="normal"  error={Boolean(errors.cname)}>
+          <InputLabel id="course-label">Course Name</InputLabel>
+          <Select
+            labelId="course-label"
             value={input.cname}
             onChange={handleInput}
             name="cname"
+            label="Course Name"
           >
-            <option value="">Select a course</option>
+            <MenuItem value="">
+              <em>Select a course</em>
+            </MenuItem>
             {course.map((val, key) => (
-              <option key={key} value={val.cname}>
+              <MenuItem key={key} value={val.cname}>
                 {val.cname}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-          {errors.cname && <span className="textError">{errors.cname}</span>}
-        </div>
-        <div>
-          <label htmlFor="sname">Student Name</label>
-          <select
-            type="text"
+          </Select>
+          {errors.cname && <FormHelperText>{errors.cname}</FormHelperText>}
+        </FormControl>
+
+        <FormControl fullWidth margin="normal" error={Boolean(errors.sname)}>
+          <InputLabel id="student-label">Student Name</InputLabel>
+          <Select
+            labelId="student-label"
             value={input.sname}
             onChange={handleInput}
             name="sname"
+            label="Student Name"
           >
-            <option value="">Select a Student</option>
+            <MenuItem value="">
+              <em>Select a Student</em>
+            </MenuItem>
             {student.map((val, key) => {
               const fullName = `${val.fname} ${val.lname}`;
               return (
-                <option key={key} value={fullName}>
+                <MenuItem key={key} value={fullName}>
                   {fullName}
-                </option>
+                </MenuItem>
               );
             })}
-          </select>
-          {errors.sname && <span className="textError">{errors.sname}</span>}
-        </div>
-        <div>
-          <label htmlFor="score">Score</label>
-          <select
-            type="text"
+          </Select>
+          {errors.sname && <FormHelperText>{errors.sname}</FormHelperText>}
+        </FormControl>
+
+        <FormControl fullWidth margin="normal" error={Boolean(errors.score)}>
+          <InputLabel id="score-label">Score</InputLabel>
+          <Select
+            labelId="score-label"
             value={input.score}
             onChange={handleInput}
             name="score"
+            label="Score"
           >
-            <option value="">Select a Score</option>
-            {scores.map((val, key) => {
-              return (
-                <option key={key} value={val}>
-                  {val}
-                </option>
-              );
-            })}
-          </select>
-          {errors.score && <span className="textError">{errors.score}</span>}
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-      <Table data={output} />
-    </div>
+            <MenuItem value="">
+              <em>Select a Score</em>
+            </MenuItem>
+            {scores.map((val, key) => (
+              <MenuItem key={key} value={val}>
+                {val}
+              </MenuItem>
+            ))}
+          </Select>
+          {errors.score && <FormHelperText>{errors.score}</FormHelperText>}
+        </FormControl>
+
+        <Button type="submit" variant="contained" sx={{ mt: 2 }}>Submit</Button>
+      </Box>
+      <Tables data={output} />
+    </Stack>
   );
 }
 
-const Table = React.memo(({ data }) => {
+const Tables = React.memo(({ data }) => {
   return (
-    <table>
-      <tr>
-        <th>Course Name</th>
-        <th>Student Name</th>
-        <th>Score</th>
-      </tr>
-      {data.map((val, key) => {
-        return (
-          <tr key={key}>
-            <td>{val.cname}</td>
-            <td>{val.sname}</td>
-            <td>{val.score}</td>
-          </tr>
-        );
-      })}
-    </table>
+    <TableContainer component = {Paper} sx = {{ overflow: 'auto', maxWidth: '100%'}} >
+        <Table size = 'small' sx ={{minWidth: 650}} stickyHeader label = "Results">
+            <TableHead>
+                <TableRow>
+                    <TableCell align="left">Course Name</TableCell>
+                    <TableCell align="left">Student Name</TableCell>
+                    <TableCell align="left">Score</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {data.map((val, key) =>{
+                    return (<TableRow key ={key}>
+                        <TableCell align="left" >{val.cname}</TableCell>
+                        <TableCell align="left">{val.sname}</TableCell>
+                        <TableCell align="left">{val.score}</TableCell>
+                    </TableRow>)
+                })}
+            </TableBody>
+        </Table>
+    </TableContainer>
   );
 });
 
