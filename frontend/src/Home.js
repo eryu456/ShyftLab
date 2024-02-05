@@ -2,7 +2,7 @@ function Home() {
   return (
     <div>
       <header className="App-Header">
-        <p>Queen's University Student Portal</p>
+        <p>ShyftLab Student Database</p>
       </header>
     </div>
   );
