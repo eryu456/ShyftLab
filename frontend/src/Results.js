@@ -1,11 +1,20 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { FormControl, InputLabel, Select, MenuItem, FormHelperText, Button, Stack, Box, Paper } from '@mui/material';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
+  Button,
+  Stack,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 import axios from "axios";
 import "./App.css";
@@ -16,7 +25,7 @@ function Result() {
     cname: "",
     score: "",
   });
-  const [output, setOutput] = useState([]);
+  const [output, setOutput] = useState([]);         //Declare variables to be used for dropdown menu + tables
   const [course, setCourses] = useState([]);
   const [student, setStudent] = useState([]);
   const [errors, setErrors] = useState({
@@ -61,15 +70,15 @@ function Result() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [resultsResponse, studentResponse, coursesResponse] =
+        const [resultsRes, studentRes, coursesRes] =                //Bundled Api calls on first load for simplicity
           await Promise.all([
             axios.get("http://localhost:8000/results_data"),
             axios.get("http://localhost:8000/student_data"),
             axios.get("http://localhost:8000/courses_data"),
           ]);
-        setOutput(resultsResponse.data);
-        setStudent(studentResponse.data);
-        setCourses(coursesResponse.data);
+        setOutput(resultsRes.data);
+        setStudent(studentRes.data);
+        setCourses(coursesRes.data);
       } catch (error) {
         console.error("There was an error fetching the data");
       }
@@ -79,24 +88,24 @@ function Result() {
 
   return (
     <Stack
-        sx = {{
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 2,
-        }}
-        direction = 'column'
+      sx={{
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 2,
+      }}
+      direction="column"
     >
-
-        <Box 
-            onSubmit={handleSubmit} 
-            component = 'form'
-            sx={{
-                width: '100%',
-                maxWidth: 360,
-                margin: 'auto',
-              }}
-        >
-        <FormControl fullWidth margin="normal"  error={Boolean(errors.cname)}>
+      <Stack
+        onSubmit={handleSubmit}
+        component="form"
+        sx={{
+          width: "100%",
+          maxWidth: 360,
+          margin: "auto",
+        }}
+        spacing={4}
+      >
+        <FormControl fullWidth margin="normal" error={Boolean(errors.cname)}>
           <InputLabel id="course-label">Course Name</InputLabel>
           <Select
             labelId="course-label"
@@ -105,7 +114,7 @@ function Result() {
             name="cname"
             label="Course Name"
           >
-            <MenuItem value="">
+            <MenuItem value="">                                 
               <em>Select a course</em>
             </MenuItem>
             {course.map((val, key) => (
@@ -162,8 +171,10 @@ function Result() {
           {errors.score && <FormHelperText>{errors.score}</FormHelperText>}
         </FormControl>
 
-        <Button type="submit" variant="contained" sx={{ mt: 2 }}>Submit</Button>
-      </Box>
+        <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+          Submit
+        </Button>
+      </Stack>
       <Tables data={output} />
     </Stack>
   );
@@ -171,25 +182,30 @@ function Result() {
 
 const Tables = React.memo(({ data }) => {
   return (
-    <TableContainer component = {Paper} sx = {{ overflow: 'auto', maxWidth: '100%'}} >
-        <Table size = 'small' sx ={{minWidth: 650}} stickyHeader label = "Results">
-            <TableHead>
-                <TableRow>
-                    <TableCell align="left">Course Name</TableCell>
-                    <TableCell align="left">Student Name</TableCell>
-                    <TableCell align="left">Score</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {data.map((val, key) =>{
-                    return (<TableRow key ={key}>
-                        <TableCell align="left" >{val.cname}</TableCell>
-                        <TableCell align="left">{val.sname}</TableCell>
-                        <TableCell align="left">{val.score}</TableCell>
-                    </TableRow>)
-                })}
-            </TableBody>
-        </Table>
+    <TableContainer
+      component={Paper}
+      sx={{ overflow: "auto", maxWidth: "100%" }}
+    >
+      <Table size="small" sx={{ minWidth: 650 }} stickyHeader label="Results">
+        <TableHead>
+          <TableRow>
+            <TableCell align="left">Course Name</TableCell>
+            <TableCell align="left">Student Name</TableCell>
+            <TableCell align="left">Score</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map((val, key) => {
+            return (
+              <TableRow key={key}>
+                <TableCell align="left">{val.cname}</TableCell>
+                <TableCell align="left">{val.sname}</TableCell>
+                <TableCell align="left">{val.score}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </TableContainer>
   );
 });

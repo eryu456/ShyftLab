@@ -8,7 +8,7 @@ import Result from "./Results";
 import NavBar from "./NavBar";
 
 function App() {
-  return (
+  return (                        //Routing 
     <BrowserRouter>
       <div className="App">
         <NavBar />
