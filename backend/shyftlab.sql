@@ -35,7 +35,6 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (1,'Web Development'),(2,'Object Oriented Programming'),(3,'Software Development'),(4,'Intro to Software Development'),(5,'Web Design And Scripting'),(6,'Object Oriented Programming');
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,7 +64,6 @@ CREATE TABLE `results` (
 
 LOCK TABLES `results` WRITE;
 /*!40000 ALTER TABLE `results` DISABLE KEYS */;
-INSERT INTO `results` VALUES (710,1,502,'C'),(711,1,501,'B'),(712,3,502,'A');
 /*!40000 ALTER TABLE `results` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +89,6 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (501,'John','Smith','1981-09-05'),(502,'Eric','Ryu','1997-02-14'),(503,'Eric','Ryu','2002-02-14'),(504,'Eric','Ryu','2006-02-14'),(505,'Eric','Ryu','2002-02-14'),(506,'Eric','Ryu','1989-02-14'),(507,'John','Smith','2014-02-14');
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -104,4 +101,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-14 14:23:13
+-- Dump completed on 2024-02-14 14:28:03
