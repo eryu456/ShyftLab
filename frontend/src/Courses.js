@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import StringFormat from "./StringFormat";
 import axios from "axios";
 import {
     Button,
@@ -32,25 +33,26 @@ function Course() {
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault();
-      const currentError = dataValidate(input);
-      setErrors(currentError);
+      const dataValid = dataValidate(input);
+      const newInput = dataValid[1];
+      setErrors(dataValid[0]);
 
-      const hasErrors = Object.values(currentError).some(   //Determines if there are errors returned from validataion function
+      const hasErrors = Object.values(errors).some(   //Determines if there are errors returned from validataion function
         (error) => error !== "",
       );
 
       if (!hasErrors) {
         axios                                               //Sends validated data to endpoint api
-          .post("http://localhost:8000/courses_data/upload", input)
+          .post("http://localhost:8000/courses_data/upload", newInput)
           .then((res) => {
             setOutput(res.data);                            //Retrives and sets new table data from api response
-            alert(`${input.cname} has been added!`);        //Notify of new addition
+            alert(`${newInput.cname} has been added!`);        //Notify of new addition
             setInput({ cname: "" });                        //Reset Inputs
           })
           .catch((err) => console.log(err));
       }
     },
-    [input],
+    [input, errors],
   );
 
   useEffect(() => {                                         //Fetching data
@@ -138,15 +140,18 @@ const Tables = React.memo(({ data }) => { //Memoized Table function to minimize 
 function dataValidate(input) { //Validation of data inputs and format
   let error = {};
   const namePattern = /^[A-Za-z ]+$/;
+  const cleanInput = {
+    cname: StringFormat(input.cname)
+  }
 
-  if (input.cname === "") {
+  if (cleanInput.cname === "") {
     error.cname = "Please enter the course name";
-  } else if (!namePattern.test(input.cname)) {
+  } else if (!namePattern.test(cleanInput.cname)) {
     error.cname = "Please enter a valid name";
   } else {
     error.cname = "";
   }
-  return error;
+  return [error, cleanInput];
 }
 
 export default Course;

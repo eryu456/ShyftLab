@@ -47,13 +47,20 @@ function Result() {
       event.preventDefault();
       const currentError = dataValidate(input);
       setErrors(currentError);
+      const courseID = course.find(c => c.cname === input.cname)?.cid;
+      const studentID = student.find(s => `${s.fname} ${s.lname}` === input.sname)?.sid;
 
+      const updatedData = {
+        cid: courseID,
+        sid: studentID,
+        score: input.score
+      };
       const hasErrors = Object.values(currentError).some(
         (error) => error !== "",
       );
       if (!hasErrors) {
         axios
-          .post("http://localhost:8000/results_data/upload", input)
+          .post("http://localhost:8000/results_data/upload", updatedData)
           .then((res) => {
             setOutput(res.data);
             alert(
@@ -64,8 +71,9 @@ function Result() {
           .catch((err) => console.log(err));
       }
     },
-    [input],
+    [input,student,course],
   );
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -199,7 +207,7 @@ const Tables = React.memo(({ data }) => {
             return (
               <TableRow key={key}>
                 <TableCell align="left">{val.cname}</TableCell>
-                <TableCell align="left">{val.sname}</TableCell>
+                <TableCell align="left">{`${val.fname} ${val.lname}`}</TableCell>
                 <TableCell align="left">{val.score}</TableCell>
               </TableRow>
             );

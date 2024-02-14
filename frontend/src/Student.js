@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import StringFormat from "./StringFormat";
 import axios from "axios";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -26,7 +27,6 @@ function Student() {
     lname: "",
     dob: "",
   });
-
   const [output, setOutput] = useState([]);
   const [errors, setErrors] = useState({
     fname: "",
@@ -42,7 +42,7 @@ function Student() {
   }, []);
 
   const handleDate = useCallback((event) => {                     //Unique date handler required due to DatePicker returning dayjs() object
-    const formatDate = event ? dayjs(event).format("YYYY/MM/DD") : "";
+    const formatDate = event ? dayjs(event).format("YYYY-MM-DD") : "";
     setInput((prevInput) => ({
       ...prevInput,
       dob: formatDate,
@@ -51,26 +51,27 @@ function Student() {
 
   const handleSubmit = useCallback(
     (event) => {
-      event.preventDefault();                                     //Data Validation 
-      const currentError = dataValidate(input);
-      setErrors(currentError);
+      event.preventDefault();                                     //Data Validation
+      const dataValid = dataValidate(input);
+      const newInput = dataValid[1];
+      setErrors(dataValid[0]);
 
-      const hasErrors = Object.values(currentError).some(
+      const hasErrors = Object.values(errors).some(
         (error) => error !== "",
       );
 
       if (!hasErrors) {
         axios
-          .post("http://localhost:8000/student_data/upload", input) //Sends validated data to endpoint api 
+          .post("http://localhost:8000/student_data/upload", newInput) //Sends validated data to endpoint api 
           .then((res) => {
             setOutput(res.data);
-            alert(`${input.fname} ${input.lname} ${input.dob} has been added!`);
+            alert(`${newInput.fname} ${newInput.lname} ${newInput.dob} has been added!`);
             setInput({ fname: "", lname: "", dob: "" });
           })
           .catch((err) => console.log(err));
       }
     },
-    [input],
+    [input, errors],
   );
 
   useEffect(() => {
@@ -173,7 +174,7 @@ const Tables = React.memo(({ data }) => {
               <TableRow key={key}>
                 <TableCell align="left">{val.fname}</TableCell>
                 <TableCell align="left">{val.lname}</TableCell>
-                <TableCell align="left">{val.dob}</TableCell>
+                <TableCell align="left">{val.dob.slice(0,10)}</TableCell>
               </TableRow>
             );
           })}
@@ -184,34 +185,41 @@ const Tables = React.memo(({ data }) => {
 });
 
 function dataValidate(input) {
-  let error = {};
+  const error = {};
   const namePattern = /^[A-Za-z]+$/;
-  let today = dayjs();
-  let ageVerify = today.subtract(10, "year");
+  const today = dayjs();
+  const ageVerify = today.subtract(10, "year");
+
+  const cleanInput = {
+    fname: StringFormat(input.fname),
+    lname: StringFormat(input.lname),
+    dob: input.dob
+  }
+  
 
   if (input.fname === "") {
     error.fname = "Please enter your first name";
-  } else if (!namePattern.test(input.fname)) {
+  } else if (!namePattern.test(cleanInput.fname)) {
     error.fname = "Please enter a valid name";
   } else {
     error.fname = "";
   }
 
-  if (input.lname === "") {
+  if (cleanInput.lname === "") {
     error.lname = "Please enter your last name";
-  } else if (!namePattern.test(input.lname)) {
+  } else if (!namePattern.test(cleanInput.lname)) {
     error.lname = "Please enter a valid name";
   } else {
-    error.lnamename = "";
+    error.lname = "";
   }
-  if (input.dob === "") {
+  if (cleanInput.dob === "") {
     error.dob = "Please enter your date of birth";
-  } else if (!dayjs(input.dob).isSameOrBefore(ageVerify)) {
+  } else if (!dayjs(cleanInput.dob).isSameOrBefore(ageVerify)) {
     error.dob = "Student must be above the age of 10";
   } else {
     error.dob = "";
   }
-  return error;
+  return [error, cleanInput];
 }
 
 export default Student;

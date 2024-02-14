@@ -76,17 +76,17 @@ app.post('/courses_data/upload', (req, res) => {
 })
 
 app.get('/results_data', (req, res) => {
-    db.query('SELECT * FROM results', (error, results) => {
+    db.query('SELECT courses.cname AS cname, student.fname AS fname, student.lname AS lname, results.score AS score FROM results INNER JOIN courses ON courses.cid = results.cid INNER JOIN student ON student.sid = results.sid;', (error, results) => {
         if (error) throw error;
         res.json(results);
     })
 })
 
 app.post('/results_data/upload', (req, res) => {
-    const sql = "INSERT INTO results (`cname`, `sname`, `score`) VALUES (?,?,?)"
+    const sql = "INSERT INTO results (`cid`, `sid`, `score`) VALUES (?,?,?)"
     const values = [
-        req.body.cname,
-        req.body.sname,
+        req.body.cid,
+        req.body.sid,
         req.body.score,
     ]
     db.query(sql, values, (err, data) => {
@@ -94,7 +94,7 @@ app.post('/results_data/upload', (req, res) => {
             console.error(err);s
             return res.status(500).json({error: "An Error has occured when inserting data"});
         }
-        db.query('SELECT * FROM results', (error, results) => {
+        db.query('SELECT courses.cname AS cname, student.fname AS fname, student.lname AS lname, results.score AS score FROM results INNER JOIN courses ON courses.cid = results.cid INNER JOIN student ON student.sid = results.sid;', (error, results) => {
             if (error) throw error;
             res.json(results);
         });
