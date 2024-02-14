@@ -36,7 +36,7 @@ USE db;
 4. Import the project's database schema and data. This step assumes you have a `.sql` file provided for the database setup:
 
 ```bash
-mysql -u root -p db < path/ShyftLab/backend/Shyft.sql
+mysql -u root -p db < path/ShyftLab/backend/shyftlab.sql
 ```
 
 ## Step 3: Backend Setup
